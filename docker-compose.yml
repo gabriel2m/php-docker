@@ -1,8 +1,5 @@
 version: '3.8'
 
-networks:
-    app: ~
-
 services:
     app:
         build: .
@@ -10,9 +7,9 @@ services:
             - .:/srv/app
             - ./docker/app/php.ini:/usr/local/etc/php/php.ini
         networks:
-            - app
+            - default
         extra_hosts:
-            - hostdocker.internal:host-gateway
+            - host.docker.internal:host-gateway
         depends_on:
             - db
 
@@ -24,7 +21,7 @@ services:
             - .:/srv/app
             - ./docker/nginx/app.conf:/etc/nginx/conf.d/app.conf
         networks:
-            - app
+            - default
         depends_on:
             - app
 
@@ -37,8 +34,7 @@ services:
         volumes:
             - ./docker/volumes/db:/var/lib/postgresql/data
         networks:
-            - app
-
+            - default
     # db:
     #     image: mysql:5.7
     #     environment: 
