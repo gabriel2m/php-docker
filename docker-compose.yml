@@ -26,7 +26,7 @@ services:
             - app
 
     db:
-        image: postgres:14-alpine
+        image: postgres:alpine
         environment:
             POSTGRES_DB: ${DB_DATABASE}
             POSTGRES_USER: ${DB_USERNAME}
@@ -36,7 +36,7 @@ services:
         networks:
             - default
     # db:
-    #     image: mysql:5.7
+    #     image: mysql
     #     environment: 
     #         MYSQL_DATABASE: ${DB_DATABASE}
     #         MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
@@ -45,4 +45,33 @@ services:
     #     volumes: 
     #         - ./docker/volumes/db:/var/lib/mysql
     #     networks:
-    #         - app
+    #         - default
+
+    adminer:
+        image: adminer
+        ports:
+            - ${ADMINER_PORT:-8002}:8080
+        depends_on:
+            - db
+        networks:
+            - default
+    # phpmyadmin:
+    #     image: phpmyadmin
+    #     ports:
+    #         - ${PHPMYADMIN_PORT:-8002}:80
+    #     environment:
+    #         PMA_HOST: db
+    #         PMA_USER: ${DB_USERNAME}
+    #         PMA_PASSWORD: ${DB_PASSWORD}
+    #     depends_on:
+    #         - db
+    #     networks:
+    #         - default
+
+    mailpit:
+        image: 'axllent/mailpit'
+        ports:
+            - '${FORWARD_MAILPIT_PORT:-1025}:1025'
+            - '${FORWARD_MAILPIT_DASHBOARD_PORT:-8025}:8025'
+        networks:
+            - default
